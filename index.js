@@ -25,7 +25,6 @@ var mat = module.exports = {
     if( !unallocated.length ){
       var i = totalAllocated;
       totalAllocated = (totalAllocated || 64) * 2; // double the size (128>256>512 etc)
-      console.log('resizing from %d to %d',i,totalAllocated)
       allocated.length = totalAllocated;
       unallocated.length = totalAllocated;
       while(i < totalAllocated){
@@ -85,15 +84,18 @@ var mat = module.exports = {
     return m ? mat.mul(a,m) : a;
   },
 
+  // TODO transpose
+  // TODO shear
+
   inv: function(a,m){
-    var d = a[0]*a[4] - a[1]*a[3];
+    var id = 1 / (a[0]*a[4] - a[1]*a[3]);
     a = mat.make(
-       a[4]/d,
-      -a[1]/d,
-      -a[3]/d,
-       a[0]/d,
-      (a[3]*a[5] - a[4]*a[2])/d,
-      (a[1]*a[2] - a[0]*a[5])/d
+       a[4]*id,
+      -a[1]*id,
+      -a[3]*id,
+       a[0]*id,
+      (a[3]*a[5] - a[4]*a[2])*id,
+      (a[1]*a[2] - a[0]*a[5])*id
     )
     return m ? mat.mul(a,m) : a;
   }
