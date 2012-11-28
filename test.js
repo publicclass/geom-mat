@@ -66,7 +66,12 @@ describe('geom',function(){
         , b = mat.make(1,0,3,4)
         , m = mat.make(1,0,0,0,5,6)
 
-      it('mul(a,b)')
+      it('mul(a,b)',function(){
+        mat.mul(a,b).should.not.equal(a)
+        mat.mul(a,b).should.not.equal(b)
+        mat.mul(a,b).should.not.equal(m)
+        mat.mul(a,b).should.eql(a)
+      })
       it('mul(a,b,m)')
       it('mul(a,a,m)')
       it('mul(a,a)')
