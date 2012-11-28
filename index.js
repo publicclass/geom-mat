@@ -1,7 +1,11 @@
-
 var unallocated = []
   , allocated = []
   , totalAllocated = 0;
+
+// Used by sin/cos to fix floating point precision errors
+// slower, but testable
+var EPS = 1e-12;
+function eps(x){ return Math.round(x/EPS) * EPS }
 
 // 2d affine transformation matrix
 var mat = module.exports = {
@@ -70,8 +74,8 @@ var mat = module.exports = {
   },
 
   rotate: function(theta,m){
-    var c = Math.cos(theta)
-      , s = Math.sin(theta)
+    var c = eps(Math.cos(theta))
+      , s = eps(Math.sin(theta))
       , a = mat.make(c,s,-s,c);
     return m ? mat.mul(a,m) : a;
   },
