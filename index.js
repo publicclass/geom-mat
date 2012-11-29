@@ -9,6 +9,10 @@ function eps(x){ return Math.round(x/EPS) * EPS }
 
 // 2d affine transformation matrix
 var mat = module.exports = {
+
+  _unallocated: unallocated,
+  _allocated: allocated,
+
   make: function(a,b,c,d,x,y){
     var m = mat.ident(mat.alloc())
       , u = undefined;
@@ -23,13 +27,14 @@ var mat = module.exports = {
 
   alloc: function(){
     if( !unallocated.length ){
-      var i = totalAllocated;
+      var i = totalAllocated
+        , u = unallocated.length - i;
       totalAllocated = (totalAllocated || 64) * 2; // double the size (128>256>512 etc)
       allocated.length = totalAllocated;
-      unallocated.length = totalAllocated;
+      console.warn('mat alloc',totalAllocated)
       while(i < totalAllocated){
         var v = [1,0,0,0,1,0,0,0,1]; //new Array(9)
-        unallocated[i] = v;
+        unallocated[u+i] = v;
         allocated[i] = v;
         i++;
       }
@@ -38,7 +43,8 @@ var mat = module.exports = {
   },
 
   free: function(v){
-    unallocated.push(v)
+    v && unallocated.push(v);
+    return mat;
   },
 
   ident: function(m){
@@ -69,19 +75,34 @@ var mat = module.exports = {
   //https://github.com/STRd6/matrix.js/blob/master/matrix.js
   translate: function(x,y,m){
     var a = mat.make(1,0,0,1,x,y)
-    return m ? mat.mul(a,m) : a;
+    if( m ){
+      mat.mul(a,m,m)
+      mat.free(a)
+      return m;
+    }
+    return a;
   },
 
   rotate: function(theta,m){
     var c = eps(Math.cos(theta))
       , s = eps(Math.sin(theta))
       , a = mat.make(c,s,-s,c);
-    return m ? mat.mul(a,m) : a;
+    if( m ){
+      mat.mul(a,m,m)
+      mat.free(a)
+      return m;
+    }
+    return a;
   },
 
   scale: function(x,y,m){
     var a = mat.make(x,0,0,y)
-    return m ? mat.mul(a,m) : a;
+    if( m ){
+      mat.mul(a,m,m)
+      mat.free(a)
+      return m;
+    }
+    return a;
   },
 
   // TODO transpose
@@ -97,6 +118,11 @@ var mat = module.exports = {
       (a[3]*a[5] - a[4]*a[2])*id,
       (a[1]*a[2] - a[0]*a[5])*id
     )
-    return m ? mat.mul(a,m) : a;
+    if( m ){
+      mat.mul(a,m,m)
+      mat.free(a)
+      return m;
+    }
+    return a;
   }
 }
