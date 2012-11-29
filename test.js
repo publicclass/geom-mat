@@ -32,16 +32,38 @@ describe('geom',function(){
       })
     })
 
+    var allocated = []
     describe('alloc',function(){
       // TODO test to make sure that this alloc()
       //      is really not GC-friendly.
       it('alloc()',function(){
-        mat.alloc().should.eql([1,0,0,0,1,0,0,0,1])
+        var m = mat.alloc()
+        m.should.eql([1,0,0,0,1,0,0,0,1])
+      })
+      it('alloc() * 10000',function(){
+        var a = mat._allocated.length - mat._unallocated.length;
+        for(var i=0; i<10000; i++){
+          var m = mat.alloc()
+          m.should.eql([1,0,0,0,1,0,0,0,1])
+          allocated.push(m);
+        }
+        var b = mat._allocated.length - mat._unallocated.length;
+        (b-a).should.equal(allocated.length)
       })
     })
     describe('free',function(){
-      it('free(v)',function(){
-        mat.free(mat.alloc());
+      it('free(allocated)',function(){
+        var a = mat._allocated.length - mat._unallocated.length;
+        var l = allocated.length;
+        while(allocated.length)
+          mat.free(allocated.pop())
+        var b = mat._allocated.length - mat._unallocated.length;
+        (b-a).should.equal(-l)
+      })
+      it('free(m)',function(){
+        var m = mat.alloc();
+        m.should.eql([1,0,0,0,1,0,0,0,1])
+        mat.free(m);
       })
     })
 
@@ -51,6 +73,7 @@ describe('geom',function(){
       it('ident()',function(){
         mat.ident().should.not.equal(a)
         mat.ident().should.eql([1,0,0,0,1,0,0,0,1])
+        mat.ident().should.eql(mat.make())
       })
       it('ident(a)',function(){
         mat.ident(a).should.equal(a)
