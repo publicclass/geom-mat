@@ -1,5 +1,7 @@
 var mat = require('./index');
 
+mat.verbose = false;
+
 describe('geom',function(){
 
   describe('mat',function(){

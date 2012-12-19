@@ -10,6 +10,8 @@ function eps(x){ return Math.round(x/EPS) * EPS }
 // 2d affine transformation matrix
 var mat = module.exports = {
 
+  verbose: true,
+
   _unallocated: unallocated,
   _allocated: allocated,
 
@@ -31,7 +33,7 @@ var mat = module.exports = {
         , u = unallocated.length - i;
       totalAllocated = (totalAllocated || 64) * 2; // double the size (128>256>512 etc)
       allocated.length = totalAllocated;
-      console.warn('mat alloc',totalAllocated)
+      mat.verbose && console.warn('mat alloc',totalAllocated)
       while(i < totalAllocated){
         var v = [1,0,0,0,1,0,0,0,1]; //new Array(9)
         unallocated[u+i] = v;
