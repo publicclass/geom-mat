@@ -16,7 +16,7 @@ var mat = module.exports = {
   _allocated: allocated,
 
   make: function(a,b,c,d,x,y){
-    var m = mat.ident(mat.alloc())
+    var m = mat.ident()
       , u = undefined;
     if( a !== u ) m[0] = a;
     if( b !== u ) m[1] = b;
@@ -49,8 +49,22 @@ var mat = module.exports = {
     return mat;
   },
 
-  ident: function(m){
+  copy: function(a,m){
     m = m || mat.make()
+    m[0] = a[0]
+    m[1] = a[1]
+    m[2] = a[2]
+    m[3] = a[3]
+    m[4] = a[4]
+    m[5] = a[5]
+    m[6] = a[6]
+    m[7] = a[7]
+    m[8] = a[8]
+    return m;
+  },
+
+  ident: function(m){
+    m = m || mat.alloc()
     m[0] = 1; // 0 0 / a
     m[1] = 0; // 0 1 / b
     m[2] = 0; // 0 2 / tx
@@ -64,14 +78,19 @@ var mat = module.exports = {
   },
 
   mul: function(a,b,m){
-    m = mat.ident(m)
-    m[0] = a[0]*b[0] + a[3]*b[1] // a*a + c*b
-    m[1] = a[1]*b[0] + a[4]*b[1] // b*a + d*b
-    m[3] = a[0]*b[3] + a[3]*b[4] // a*c + c*d
-    m[4] = a[1]*b[3] + a[4]*b[4] // b*c + d*d
-    m[2] = a[0]*b[2] + a[3]*b[2] + a[2] // a*tx + c*ty + tx
-    m[5] = a[1]*b[2] + a[4]*b[5] + a[5] // b*tx + d*ty + ty
-    return m;
+    var c = mat.make()
+    c[0] = a[0]*b[0] + a[3]*b[1] // a*a + c*b
+    c[1] = a[1]*b[0] + a[4]*b[1] // b*a + d*b
+    c[3] = a[0]*b[3] + a[3]*b[4] // a*c + c*d
+    c[4] = a[1]*b[3] + a[4]*b[4] // b*c + d*d
+    c[2] = a[0]*b[2] + a[3]*b[5] + a[2] // a*tx + c*ty + tx
+    c[5] = a[1]*b[2] + a[4]*b[5] + a[5] // b*tx + d*ty + ty
+    if( m ){
+      mat.copy(c,m)
+      mat.free(c)
+      return m;
+    }
+    return c;
   },
 
   //https://github.com/STRd6/matrix.js/blob/master/matrix.js
