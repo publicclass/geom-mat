@@ -112,23 +112,45 @@ describe('geom',function(){
         mat.free(m)
       })
     })
+
     describe('rotate',function(){
       it('rotate(theta)')
       it('rotate(theta,m)')
     })
+
     describe('translate',function(){
-      it('translate(x,y)')
-      it('translate(x,y,m)')
+      it('translate(x,y)',function(){
+        mat.translate(1,0).should.eql([1,0,1,0,1,0,0,0,1])
+        mat.translate(1,1).should.eql([1,0,1,0,1,1,0,0,1])
+        mat.translate(0,1).should.eql([1,0,0,0,1,1,0,0,1])
+        mat.translate(-1,0).should.eql([1,0,-1,0,1,0,0,0,1])
+        mat.translate(-1,-1).should.eql([1,0,-1,0,1,-1,0,0,1])
+        mat.translate(0,-1).should.eql([1,0,0,0,1,-1,0,0,1])
+        mat.translate(-1,1).should.eql([1,0,-1,0,1,1,0,0,1])
+        mat.translate(1,-1).should.eql([1,0,1,0,1,-1,0,0,1])
+      })
+      it('translate(x,y,m)',function(){
+        var m = mat.make()
+        mat.translate(1,0,m).should.eql([1,0,1,0,1,0,0,0,1])
+        mat.translate(1,1,m).should.eql([1,0,2,0,1,1,0,0,1])
+        mat.translate(0,1,m).should.eql([1,0,2,0,1,2,0,0,1])
+        mat.translate(-1,0,m).should.eql([1,0,1,0,1,2,0,0,1])
+        mat.translate(-1,-1,m).should.eql([1,0,0,0,1,1,0,0,1])
+        mat.translate(0,-1,m).should.eql([1,0,0,0,1,0,0,0,1])
+        mat.translate(-1,1,m).should.eql([1,0,-1,0,1,1,0,0,1])
+        mat.translate(1,-1,m).should.eql([1,0,0,0,1,0,0,0,1])
+      })
     })
+
     describe('scale',function(){
       it('scale(x,y)')
       it('scale(x,y,m)')
     })
+
     describe('inv',function(){
       it('inv()')
       it('inv(m)')
       it('inv(inv(m))')
     })
   })
-
 })
