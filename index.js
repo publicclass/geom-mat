@@ -51,15 +51,15 @@ var mat = module.exports = {
 
   copy: function(a,m){
     m = m || mat.make()
-    m[0] = a[0]
-    m[1] = a[1]
-    m[2] = a[2]
-    m[3] = a[3]
-    m[4] = a[4]
-    m[5] = a[5]
-    m[6] = a[6]
-    m[7] = a[7]
-    m[8] = a[8]
+    m[0] = a[0];
+    m[1] = a[1];
+    m[2] = a[2];
+    m[3] = a[3];
+    m[4] = a[4];
+    m[5] = a[5];
+    m[6] = a[6];
+    m[7] = a[7];
+    m[8] = a[8];
     return m;
   },
 
