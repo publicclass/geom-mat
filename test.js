@@ -95,9 +95,13 @@ describe('geom',function(){
         mat.mul(a,b).should.not.equal(a)
         mat.mul(a,b).should.not.equal(b)
         mat.mul(a,b).should.not.equal(m)
-        mat.mul(a,b).should.eql(a)
+        // TODO verify the values too
       })
-      it('mul(a,b,m)')
+      it('mul(a,b,m)',function(){
+        mat.mul(a,b,m).should.not.equal(a)
+        mat.mul(a,b,m).should.not.equal(b)
+        mat.mul(a,b,m).should.equal(m)
+      })
       it('mul(a,a,m)')
       it('mul(a,a)')
       it('mul(a,b,a)')
